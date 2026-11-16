@@ -37,3 +37,17 @@ fn mql4_mql5_and_header_files_share_metrics() {
         assert_eq!(function(file, "Score")["cognitive_complexity"], 3);
     }
 }
+
+#[test]
+fn mql_and_cpp_files_in_one_repository_keep_their_languages() {
+    let temp = tempfile::tempdir().unwrap();
+    support::write(&temp.path().join("expert.mq5"), SOURCE);
+    support::write(
+        &temp.path().join("engine.cpp"),
+        "int run(int x) { return x ? 1 : 0; }\n",
+    );
+    let report = support::report(&support::run("repo", temp.path(), None, None));
+    let language = |suffix: &str| support::file(&report, suffix)["language"].clone();
+    assert_eq!(language("expert.mq5"), "mql5");
+    assert_eq!(language("engine.cpp"), "cpp");
+}
