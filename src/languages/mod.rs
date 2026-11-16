@@ -1,6 +1,7 @@
 mod assets;
 pub(crate) mod go;
 pub(crate) mod kotlin;
+mod mql;
 mod php;
 mod python;
 pub(crate) mod query;

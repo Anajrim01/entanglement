@@ -1,0 +1,21 @@
+{
+  "grammars": [
+    {
+      "name": "mql5",
+      "camelcase": "Mql5",
+      "scope": "source.mql5",
+      "path": ".",
+      "file-types": ["mq4", "mq5", "mqh"],
+      "external-files": ["src/scanner.c"],
+      "injection-regex": "^mql[45]?$"
+    }
+  ],
+  "metadata": {
+    "version": "0.0.1",
+    "license": "ISC",
+    "description": "MQL4 and MQL5 grammar for tree-sitter",
+    "links": {
+      "repository": "https://github.com/davalillo/tree-sitter-mql5"
+    }
+  }
+}

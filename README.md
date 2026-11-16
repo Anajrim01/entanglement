@@ -73,6 +73,7 @@ Supported manifests include `Cargo.toml`, `package.json`, `tsconfig.json`,
 | Go | `.go` |
 | PHP 8.2–8.5 | `.php`, `.phtml` |
 | Kotlin | `.kt`, `.kts` |
+| MQL4, MQL5 | `.mq4`, `.mq5`, `.mqh` |
 | TypeScript | `.ts`, `.mts`, `.cts` |
 | TSX | `.tsx` |
 | JavaScript | `.js`, `.jsx`, `.mjs`, `.cjs` |

@@ -19,6 +19,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "tree-sitter-php" => Some("DEP_ENTANGLEMENT_PHP_ROOT"),
             "tree-sitter-kotlin" => Some("DEP_ENTANGLEMENT_KOTLIN_ROOT"),
             "tree-sitter-groovy" => Some("DEP_ENTANGLEMENT_GROOVY_ROOT"),
+            "tree-sitter-mql5" => Some("DEP_ENTANGLEMENT_MQL5_ROOT"),
             _ => None,
         };
         if generated_variable.is_some() && package.source.is_some() {

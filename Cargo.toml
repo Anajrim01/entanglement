@@ -34,6 +34,7 @@ tree-sitter-php = "=0.25.1"
 tree-sitter-kotlin = { path = "grammar-metadata/tree-sitter-kotlin" }
 
 tree-sitter-groovy = { path = "grammar-metadata/tree-sitter-groovy" }
+tree-sitter-mql5 = { path = "grammar-metadata/tree-sitter-mql5" }
 
 [dev-dependencies]
 tempfile = "3.27.0"
@@ -50,3 +51,6 @@ tree-sitter-php = { path = "grammar-metadata/tree-sitter-php" }
 
 # The upstream Groovy binding uses the former runtime type.
 tree-sitter-groovy-runtime = { package = "tree-sitter", path = "grammar-metadata/tree-sitter-groovy/runtime" }
+
+# The upstream MQL binding uses the former runtime type.
+tree-sitter-mql5-runtime = { package = "tree-sitter", path = "grammar-metadata/tree-sitter-mql5/runtime" }
