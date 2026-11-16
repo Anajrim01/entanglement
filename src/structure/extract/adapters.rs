@@ -123,6 +123,8 @@ pub(super) fn limitations(language: &str) -> Vec<String> {
         &["build_variants", "generic_subst"]
     } else if language.contains("mql") {
         &["macro_output"]
+    } else if c_family(language) {
+        &["preprocessor_variants"]
     } else if language.contains("typescript") || language.contains("tsx") {
         &["conditional_types", "mapped_types", "structural_compat"]
     } else {
@@ -135,6 +137,17 @@ pub(super) fn object_analysis(language: &str) -> bool {
     !["html", "css", "angular", "astro", "svelte"]
         .iter()
         .any(|name| language.contains(name))
+        && !c_family(language)
+}
+
+/// C and C++ are parsed without macro expansion, so valid code leaves syntax
+/// errors behind. The parser recovers around them and module structure survives.
+pub(super) fn recovers_from_syntax_errors(language: &str) -> bool {
+    c_family(language)
+}
+
+fn c_family(language: &str) -> bool {
+    matches!(language, "source.c" | "source.cpp" | "c" | "cpp")
 }
 
 use super::adapter_ownership::type_leaf;
