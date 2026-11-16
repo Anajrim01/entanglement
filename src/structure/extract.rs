@@ -1,4 +1,5 @@
 mod adapter_members;
+mod adapter_mql;
 mod adapter_ownership;
 mod adapter_relations;
 mod adapter_visibility;

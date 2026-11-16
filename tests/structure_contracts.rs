@@ -4,6 +4,8 @@ mod go;
 mod javascript;
 #[path = "structure_contracts/kotlin.rs"]
 mod kotlin;
+#[path = "structure_contracts/mql.rs"]
+mod mql;
 #[path = "structure_contracts/php.rs"]
 mod php;
 #[path = "structure_contracts/python.rs"]

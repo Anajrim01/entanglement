@@ -1,6 +1,7 @@
 use tree_sitter::Node;
 
 pub(super) use super::adapter_members::{constraints, contract_fields, member_kind};
+pub(super) use super::adapter_mql::is_prototype_defined_elsewhere;
 pub(super) use super::adapter_relations::{
     argument_relations, declared_relations, is_type_position, relation,
 };
@@ -11,6 +12,10 @@ pub(super) fn declaration(kind: &str) -> Option<(&'static str, bool)> {
         "trait_item" | "interface_declaration" => Some(("interface", true)),
         "struct_item"
         | "enum_item"
+        | "class_specifier"
+        | "struct_specifier"
+        | "interface_specifier"
+        | "enum_specifier"
         | "union_item"
         | "class_definition"
         | "class_declaration"
@@ -45,6 +50,9 @@ pub(super) fn declaration(kind: &str) -> Option<(&'static str, bool)> {
 }
 
 pub(super) fn classification(node: Node<'_>, owners: &[String]) -> Option<(&'static str, bool)> {
+    if let Some(classified) = super::adapter_mql::classification(node) {
+        return classified;
+    }
     if !owners.is_empty() && matches!(node.kind(), "associated_type" | "type_item") {
         return Some(("associated", false));
     }
@@ -59,6 +67,9 @@ pub(super) fn classification(node: Node<'_>, owners: &[String]) -> Option<(&'sta
 }
 
 pub(super) fn name(node: Node<'_>) -> Option<Node<'_>> {
+    if let Some(declared) = crate::languages::mql::syntax::declared_name(node) {
+        return Some(declared);
+    }
     if node.kind() == "assignment" {
         return node
             .child_by_field_name("left")
@@ -89,6 +100,7 @@ pub(super) fn additional_names(node: Node<'_>, source: &[u8]) -> Vec<String> {
     let mut cursor = node.walk();
     node.children_by_field_name("name", &mut cursor)
         .skip(1)
+        .chain(crate::languages::mql::syntax::extra_names(node))
         .map(|name| super::capture::text(name, source))
         .collect()
 }
@@ -109,6 +121,8 @@ pub(super) fn limitations(language: &str) -> Vec<String> {
         &["dynamic_dispatch", "version_properties"]
     } else if language.contains("kotlin") {
         &["build_variants", "generic_subst"]
+    } else if language.contains("mql") {
+        &["macro_output"]
     } else if language.contains("typescript") || language.contains("tsx") {
         &["conditional_types", "mapped_types", "structural_compat"]
     } else {

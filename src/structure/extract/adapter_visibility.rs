@@ -37,7 +37,7 @@ pub(super) fn public(
             || existing.is_some_and(|definition| definition.is_public)
             || header.starts_with("pub");
     }
-    if language.contains("php") || language.contains("kotlin") {
+    if language.contains("php") || language.contains("kotlin") || language.contains("mql") {
         return existing
             .and_then(|definition| definition.declaration.as_ref())
             .is_none_or(|declaration| {
@@ -78,6 +78,8 @@ pub(super) fn required(
     match kind {
         "property" if node.kind() == "property_signature" => true,
         "member" if node.child_by_field_name("receiver").is_some() => false,
+        // A prototype is a declaration; only pure virtual ones are requirements.
+        "member" if node.kind() == "field_declaration" => false,
         "member" => !has_body,
         "associated" => {
             node.child_by_field_name("type").is_none()

@@ -140,6 +140,9 @@ fn declaration(
     } else {
         adapters::member_owner(node, source, owners)
     };
+    if adapters::is_prototype_defined_elsewhere(node, &name, &owner, facts) {
+        return None;
+    }
     if node.kind() == "assignment" && owner.is_empty() {
         return None;
     }

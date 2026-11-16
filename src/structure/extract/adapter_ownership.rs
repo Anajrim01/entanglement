@@ -11,6 +11,9 @@ pub(super) fn member_owner(node: Node<'_>, source: &[u8], owners: &[String]) -> 
     }) {
         return Vec::new();
     }
+    if let Some(class) = crate::languages::mql::syntax::qualifier(node) {
+        return vec![super::capture::text(class, source)];
+    }
     node.child_by_field_name("receiver")
         .and_then(type_leaf)
         .map_or_else(
@@ -20,7 +23,10 @@ pub(super) fn member_owner(node: Node<'_>, source: &[u8], owners: &[String]) -> 
 }
 
 pub(super) fn receiver(node: Node<'_>, source: &[u8]) -> Option<String> {
-    if node.kind() == "field_declaration" && node.child_by_field_name("name").is_none() {
+    if node.kind() == "field_declaration"
+        && node.child_by_field_name("name").is_none()
+        && node.child_by_field_name("declarator").is_none()
+    {
         let mut cursor = node.walk();
         let pointer = node
             .children(&mut cursor)
