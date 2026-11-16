@@ -6,6 +6,7 @@ use crate::languages::ResolutionFamily;
 use crate::model::{Import, Reference, ReferenceAnalysis, ReferenceKind, Resolution};
 
 use super::bindings::{BindingTarget, binding_target};
+use super::includes;
 use super::layout::resolve_submodule;
 use super::{Index, Target, to_resolution};
 
@@ -48,6 +49,9 @@ impl Index<'_, '_> {
         ) {
             BindingTarget::Local(targets) if reference.path.len() == 1 => to_resolution(targets),
             BindingTarget::Import(import) => self.resolve_import_reference(file, import, reference),
+            BindingTarget::Unresolved if includes::apply(fact) => {
+                self.resolve_through_includes(file, fact, reference)
+            }
             BindingTarget::Local(_) | BindingTarget::Unresolved => Resolution::Unresolved,
         }
     }
@@ -62,14 +66,17 @@ impl Index<'_, '_> {
             return Resolution::Unresolved;
         }
         let targets = self.resolve_import_binding(file, import, &mut BTreeSet::new());
-        let targets = reference
-            .path
-            .iter()
-            .skip(1)
-            .fold(targets, |targets, name| {
-                self.resolve_namespace_member(targets, name)
-            });
-        to_resolution(targets)
+        to_resolution(self.resolve_member_path(targets, &reference.path[1..]))
+    }
+
+    pub(super) fn resolve_member_path(
+        &self,
+        targets: Vec<Target>,
+        members: &[String],
+    ) -> Vec<Target> {
+        members.iter().fold(targets, |targets, name| {
+            self.resolve_namespace_member(targets, name)
+        })
     }
 
     fn resolve_namespace_member(&self, targets: Vec<Target>, name: &str) -> Vec<Target> {

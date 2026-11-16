@@ -9,6 +9,7 @@ use crate::model::{ReferenceAnalysis, Resolution};
 
 mod bindings;
 mod exports;
+mod includes;
 pub(super) mod indexing;
 mod layout;
 mod references;

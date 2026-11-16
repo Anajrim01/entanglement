@@ -1,7 +1,7 @@
 mod assets;
 pub(crate) mod go;
 pub(crate) mod kotlin;
-mod mql;
+pub(crate) mod mql;
 mod php;
 mod python;
 pub(crate) mod query;
@@ -119,6 +119,8 @@ pub(crate) struct FileModuleRules {
     pub layout: FileModuleLayout,
     pub module_bindings_shadow: bool,
     pub wildcard_imports_shadow: bool,
+    /// Resolve a name no binding claims through the files named by wildcard imports.
+    pub wildcard_imports_resolve: bool,
 }
 
 /// File layout used by a registered file-module strategy.

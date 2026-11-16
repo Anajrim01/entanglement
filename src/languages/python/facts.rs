@@ -25,6 +25,7 @@ pub(super) const PYTHON_FILE_MODULE_RULES: FileModuleRules = FileModuleRules {
     },
     module_bindings_shadow: true,
     wildcard_imports_shadow: true,
+    wildcard_imports_resolve: false,
 };
 
 pub(super) use crate::languages::SemanticStore as SemanticFacts;

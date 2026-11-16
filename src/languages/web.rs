@@ -41,6 +41,7 @@ const WEB_MODULE_RULES: FileModuleRules = FileModuleRules {
     layout: FileModuleLayout::SlashRelative,
     module_bindings_shadow: false,
     wildcard_imports_shadow: false,
+    wildcard_imports_resolve: false,
 };
 
 pub(super) const LANGUAGE_SPECS: &[LanguageSpec] = &[
