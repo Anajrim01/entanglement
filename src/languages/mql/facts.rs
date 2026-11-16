@@ -13,6 +13,8 @@ pub(super) const MQL_FILE_MODULE_RULES: FileModuleRules = FileModuleRules {
     wildcard_imports_shadow: false,
     // `#include` makes every name of the included file visible.
     wildcard_imports_resolve: true,
+    // `<Lib/File.mqh>` names a file below the terminal's `MQL5/Include` folder.
+    library_roots: &["Include"],
 };
 
 pub(super) fn capture(root: Node<'_>, source: &[u8]) -> SemanticStore {

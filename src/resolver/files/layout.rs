@@ -22,13 +22,38 @@ pub(super) fn resolve_slash(
         return vec![Target::Unresolved];
     }
     if !is_relative_slash(source) {
-        return vec![Target::External];
+        return resolve_library(index, file, source, rules);
     }
     let requests = index.facts[file]
         .aliases
         .iter()
         .filter_map(|alias| alias.parent().map(|parent| parent.join(source)));
     resolve_requests(index, requests, rules)
+}
+
+/// Search the language's library folders; a specifier found nowhere is external.
+fn resolve_library(
+    index: &Index<'_, '_>,
+    file: usize,
+    source: &str,
+    rules: &FileModuleRules,
+) -> Vec<Target> {
+    let requests = index.facts[file]
+        .aliases
+        .iter()
+        .flat_map(|alias| alias.ancestors().skip(1))
+        .flat_map(|folder| {
+            rules
+                .library_roots
+                .iter()
+                .map(move |root| folder.join(root).join(source))
+        });
+    let targets = resolve_requests(index, requests, rules);
+    if targets == [Target::Unresolved] {
+        vec![Target::External]
+    } else {
+        targets
+    }
 }
 
 pub(super) fn resolve_requests(

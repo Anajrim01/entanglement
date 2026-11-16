@@ -42,6 +42,7 @@ const WEB_MODULE_RULES: FileModuleRules = FileModuleRules {
     module_bindings_shadow: false,
     wildcard_imports_shadow: false,
     wildcard_imports_resolve: false,
+    library_roots: &[],
 };
 
 pub(super) const LANGUAGE_SPECS: &[LanguageSpec] = &[

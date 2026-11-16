@@ -121,6 +121,8 @@ pub(crate) struct FileModuleRules {
     pub wildcard_imports_shadow: bool,
     /// Resolve a name no binding claims through the files named by wildcard imports.
     pub wildcard_imports_resolve: bool,
+    /// Folders that a non-relative specifier is searched in, below each ancestor of the importer.
+    pub library_roots: &'static [&'static str],
 }
 
 /// File layout used by a registered file-module strategy.

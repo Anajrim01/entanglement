@@ -94,3 +94,36 @@ fn mql_inheritance_resolves_through_included_headers() {
     // A name only the transitive include provides still resolves.
     assert!(resolved("Expert.mq5", "Base.mqh", "type"), "{edges:#?}");
 }
+
+#[test]
+fn mql_angle_includes_resolve_in_an_include_folder() {
+    let root = tempfile::tempdir().unwrap();
+    write(
+        &root.path().join("Include/Lib/Util.mqh"),
+        "class CUtil {};\n",
+    );
+    write(
+        &root.path().join("Experts/Expert.mq5"),
+        "#include <Lib\\Util.mqh>\nclass CApp : public CUtil {};\n",
+    );
+    let result = report(&run("repo", root.path(), None, Some("structure")));
+    let edges = result["structure"]["relationships"].as_array().unwrap();
+    assert!(
+        edges.iter().any(|edge| edge["kind"] == "inherit"
+            && edge["target"].as_str().unwrap().contains("Util.mqh")
+            && edge["resolution"] == "resolved"),
+        "{edges:#?}"
+    );
+}
+
+#[test]
+fn legacy_mql4_c_subset_has_declarations() {
+    let result = analyze(
+        "legacy.mq4",
+        "struct Order { int ticket; double lots; };\nint start() { return(0); }\n",
+    );
+    assert_eq!(
+        member(declaration(&result, "Order"), "ticket")["visibility"],
+        "public"
+    );
+}
